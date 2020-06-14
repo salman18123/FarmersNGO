@@ -83,6 +83,35 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
       answer:Sequelize.DataTypes.STRING
   })
 
+  const Crop=sequelize.define('crops',{
+    id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    type:Sequelize.DataTypes.STRING
+  })
+
+  const CropStats=sequelize.define('cropstats',{
+    farmerId: {
+      type: Sequelize.DataTypes.INTEGER,
+      references: {
+        model:Farmer, 
+        key: 'id'
+      }
+    },
+    cropId: {
+      type: Sequelize.DataTypes.INTEGER,
+      references: {
+        model: Crop, 
+        key: 'id'
+      }
+    },
+    area:Sequelize.DataTypes.DOUBLE,
+    incremental_grain_yield:Sequelize.DataTypes.INTEGER,
+    incremental_biomass_yield:Sequelize.DataTypes.INTEGER,
+    incremental_income:Sequelize.DataTypes.INTEGER,
+    num_incremental_man_days:Sequelize.DataTypes.INTEGER,
+    water_saved:Sequelize.DataTypes.DOUBLE
+
+  })
+
   // Adding Associations for the tables
 
   FarmerGroup.hasMany(Farmer);
@@ -101,6 +130,8 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
  // Meeting.belongsTo(CRP);
 
   Meeting.belongsToMany(Farmer,{through:'farmerMeeting'});
+
+  Farmer.belongsToMany(Crop,{through:CropStats});
 
 
   exports=module.exports={
