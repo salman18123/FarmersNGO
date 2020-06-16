@@ -25,21 +25,32 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     gram_panchayat:Sequelize.DataTypes.STRING,
     
   });
-
   const Farmer=sequelize.define('farmers',{
-      id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-      name: Sequelize.DataTypes.STRING,
-      father_name: Sequelize.DataTypes.STRING,
-      mother_name: Sequelize.DataTypes.STRING,
-      spouse_name: Sequelize.DataTypes.STRING,
-      sex:Sequelize.DataTypes.STRING,
-      phone_number:Sequelize.DataTypes.STRING,
-      designation:Sequelize.DataTypes.STRING,
-      category:Sequelize.DataTypes.STRING,
-      land_in_holding:Sequelize.DataTypes.STRING
-  });
+    id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name: Sequelize.DataTypes.STRING,
+    father_name: Sequelize.DataTypes.STRING,
+    mother_name: Sequelize.DataTypes.STRING,
+    spouse_name: Sequelize.DataTypes.STRING,
+    sex:Sequelize.DataTypes.STRING,
+    phone_number:Sequelize.DataTypes.STRING,
+    designation:Sequelize.DataTypes.STRING,
+    category:Sequelize.DataTypes.STRING,
+    land_in_holding:Sequelize.DataTypes.STRING
+});
+  
+  const Meeting=sequelize.define('meetings',{
+    id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    description:Sequelize.DataTypes.STRING,
+    location:Sequelize.DataTypes.STRING,
+    schdeuled_on:Sequelize.DataTypes.DATE,
+    remarks:Sequelize.DataTypes.STRING,
+    gram_panchayat:Sequelize.DataTypes.STRING,
+    village:Sequelize.DataTypes.STRING,
+    video_name:Sequelize.DataTypes.STRING
+});
 
-  const FC=sequelize.define('fcdata',{
+
+ const FC=sequelize.define('fcdata',{
     id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: Sequelize.DataTypes.STRING, 
     phone_number:Sequelize.DataTypes.STRING,
@@ -60,13 +71,7 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     sex:Sequelize.DataTypes.STRING,
   });
 
-  const Meeting=sequelize.define('meetings',{
-      id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-      description:Sequelize.DataTypes.STRING,
-      location:Sequelize.DataTypes.STRING,
-      schdeuled_on:Sequelize.DataTypes.DATE,
-      remarks:Sequelize.DataTypes.STRING
-  });
+
 
   const Survey=sequelize.define('surveys',{
     id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true}, 
@@ -112,6 +117,26 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
 
   })
 
+  const FarmerMeeting=sequelize.define('farmerMeeting',{
+    farmerId: {
+      type: Sequelize.DataTypes.INTEGER,
+      references: {
+        model:Farmer, 
+        key: 'id'
+      }
+    },
+    meetingId: {
+      type: Sequelize.DataTypes.INTEGER,
+      references: {
+        model: Meeting, 
+        key: 'id'
+      }
+    },
+    is_present:Sequelize.DataTypes.CHAR,
+    adoption_wish:Sequelize.DataTypes.DOUBLE,
+    questions_asked:Sequelize.DataTypes.STRING
+  })
+
   // Adding Associations for the tables
 
   FarmerGroup.hasMany(Farmer);
@@ -129,12 +154,12 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   CRP.hasMany(Meeting);
  // Meeting.belongsTo(CRP);
 
-  Meeting.belongsToMany(Farmer,{through:'farmerMeeting'});
+  Meeting.belongsToMany(Farmer,{through:FarmerMeeting});
 
   Farmer.belongsToMany(Crop,{through:CropStats});
 
 
   exports=module.exports={
-    FarmerGroup,Farmer,FC,CRP,MKS,Meeting,DATABASE: sequelize
+    FarmerGroup,Farmer,FC,CRP,MKS,Meeting,Crop,CropStats,DATABASE: sequelize
 }
 
