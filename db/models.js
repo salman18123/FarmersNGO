@@ -41,12 +41,14 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   const Meeting=sequelize.define('meetings',{
     id:{type: Sequelize.DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     description:Sequelize.DataTypes.STRING,
-    location:Sequelize.DataTypes.STRING,
-    schdeuled_on:Sequelize.DataTypes.DATE,
+    
+    scheduled_on:Sequelize.DataTypes.DATE,
     remarks:Sequelize.DataTypes.STRING,
     gram_panchayat:Sequelize.DataTypes.STRING,
     village:Sequelize.DataTypes.STRING,
-    video_name:Sequelize.DataTypes.STRING
+    video_name:Sequelize.DataTypes.STRING,
+    start_time:Sequelize.DataTypes.TIME,
+    end_time:Sequelize.DataTypes.TIME
 });
 
 

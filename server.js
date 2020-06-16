@@ -11,7 +11,7 @@ const sequelize=require('./db/models').DATABASE
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use('/', express.static(path.join(__dirname, 'public')))
-//app.use('/api/v1',require('./routes/api_v1'))
+app.use('/api/v1',require('./routes/api_v1'))
 // app.listen(SERVER_PORT,()=>{
 //     console.log("servr started")
 // })
